@@ -1,23 +1,6 @@
-use std::collections::HashMap;
+use poseidon::store::memory::Store;
+use std::io::{self, Read, Write};
 
-#[derive(Debug)]
-struct Store {
-       map : HashMap<String, String>
-}
-impl Store {
-    fn new() -> Self {
-        Store { map: HashMap::new() }
-    }
-    fn get(&self, key: String) -> Option<&String> {
-        self.map.get(&key)  
-    }
-    fn put(&mut self, key: String, value: String) {
-           self.map.insert(key,value);
-    }
-    fn delete(&mut self, key : String) {
-       self.map.remove(&key);
-    }
-}
 enum Command {
     Get {key : String},
     Put {key : String, value : String},
@@ -25,8 +8,22 @@ enum Command {
 }
 
 fn main() {
+    loop {
+        print!("Welcome to Poseidon! ");
+        io::stdout().flush().unwrap_err();
 
-    let mut my_database = Store::new();
-    my_database.put(String::from("Rohit"), String::from("Suthar"));
-    println!("The value of key Rohit is {:?}", my_database.get(String::from("Rohit")));
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+
+        let clean_input = input.trim();
+        let mut words = clean_input.split_whitespace();
+
+        let command_name = words.next();
+        let key = words.next();
+        let value = words.next();
+
+        if input.trim() == "exit" {
+            break;
+        }
+    }
 }

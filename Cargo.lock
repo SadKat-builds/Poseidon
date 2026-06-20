@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "distributed-key-value-database"
+name = "poseidon"
 version = "0.1.0"
