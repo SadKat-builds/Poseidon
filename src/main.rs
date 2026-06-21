@@ -1,16 +1,15 @@
-use poseidon::store::memory::Store;
-use std::io::{self, Read, Write};
+use poseidon::store::{log::Logs, memory::Store, log::Command};
+use std::io::{self, Write};
 
-enum Command {
-    Get {key : String},
-    Put {key : String, value : String},
-    Delete { key: String}
-}
 
 fn main() {
     let mut start_store = Store::new();
+    let mut _init_logs = Logs::new().unwrap();
     loop {
-        print!("Welcome to Poseidon! ");
+        println!("Welcome to Poseidon! ");
+        println!("List of Operations Available : GET | PUT | DELETE | EXIT");
+        
+        print!("Enter your command : ");
         io::stdout().flush().unwrap();
 
         let mut input = String::new();
@@ -28,7 +27,7 @@ fn main() {
         }
 
         match command_name {
-            Some("Get") => {
+            Some("GET") => {
                  if let Some(k) = key {
                     let _cmd = Command::Get { key: k.to_string() };
                     match _cmd {
@@ -45,13 +44,14 @@ fn main() {
                     println!("You must provide a key value");
                  }
             }
-            Some("Put") => {
+            Some("PUT") => {
                 if let (Some(k),Some(v)) = (key,value) {
-                    let _cmd = Command::Put{key:k.to_string(), value:v.to_string()};
-                    match _cmd {
-                        Command::Put {key , value} => {
-                            println!("Executing Put Operation For : {} , Value : {}", key , value);
-                            start_store.put(key, value);
+                    let cmd = Command::Put{key:k.to_string(), value:v.to_string()};
+                    match cmd {
+                        Command::Put {ref key , ref value} => {
+                            println!("Executing Put Operation For Key : {} , Value : {}", key , value);
+                            _init_logs.append(&cmd).unwrap();
+                            start_store.put(key.to_string(), value.to_string());
                         }
                         _ => {}
                     }
@@ -59,7 +59,7 @@ fn main() {
                     println!("You must provide a key value and a value");
                 }
             }
-            Some("Delete") => {
+            Some("DELETE") => {
                 if let Some(k) = key {
                     let _cmd = Command::Delete{key:k.to_string()};
                     match _cmd {
