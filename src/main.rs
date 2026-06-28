@@ -1,11 +1,11 @@
-use poseidon::store::{log::Logs, memory::Store, log::Command};
+use poseidon::store::{log::Logs, log::Command};
 use std::io::{self, Write};
 
 
 fn main() {
-    let mut start_store = Store::new();
     let mut _init_logs = Logs::new().unwrap();
-    
+    let mut start_store = _init_logs.replay().unwrap();
+        
     loop {
         println!("Welcome to Poseidon! ");
         println!("List of Operations Available : GET | PUT | DELETE | EXIT");
