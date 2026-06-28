@@ -5,6 +5,7 @@ use std::io::{self, Write};
 fn main() {
     let mut start_store = Store::new();
     let mut _init_logs = Logs::new().unwrap();
+    
     loop {
         println!("Welcome to Poseidon! ");
         println!("List of Operations Available : GET | PUT | DELETE | EXIT");
@@ -29,13 +30,13 @@ fn main() {
         match command_name {
             Some("GET") => {
                  if let Some(k) = key {
-                    let _cmd = Command::Get { key: k.to_string() };
-                    match _cmd {
+                    let cmd = Command::Get { key: k.to_string() };
+                    match cmd {
                         Command::Get { key } => {
                             println!("Executing Get Operation For : {}", key);
-                            match start_store.get(key) {
+                            match start_store.get( key) {
                                 Some(value) => println!("Value : {}", value),
-                                None => println!("Key not found"),
+                                None => println!("Key not found"), 
                             }
                         }
                         _ => {}
@@ -61,11 +62,12 @@ fn main() {
             }
             Some("DELETE") => {
                 if let Some(k) = key {
-                    let _cmd = Command::Delete{key:k.to_string()};
-                    match _cmd {
-                        Command::Delete {key} => {
+                    let cmd = Command::Delete{key:k.to_string()};
+                    match cmd {
+                        Command::Delete {ref key} => {
+                            _init_logs.append(&cmd).unwrap();
                             println!("Executing Delete Operation For : {}", key);
-                            start_store.delete(key);
+                            start_store.delete(key.to_string());
                         }
                         _ => {}
                     }
